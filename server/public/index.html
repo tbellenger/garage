@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Birdhouse Garage</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="/javascripts/index.js" defer></script>
+  </head>
+
+  <body>
+    <form>
+      <div class="keypad" id="code">
+        <input class="row password" id="password" type="password" readonly />
+        <div class="row">
+          <div class="button" id="7">7</div>
+          <div class="button" id="8">8</div>
+          <div class="button" id="9">9</div>
+        </div>
+        <div class="row">
+          <div class="button" id="4">4</div>
+          <div class="button" id="5">5</div>
+          <div class="button" id="6">6</div>
+        </div>
+        <div class="row">
+          <div class="button" id="1">1</div>
+          <div class="button" id="2">2</div>
+          <div class="button" id="3">3</div>
+        </div>
+        <div class="row">
+          <div class="button" id="clear">&#9249;</div>
+          <div class="button" id="0">0</div>
+          <div class="button" id="enter">&#9166;</div>
+        </div>
+      </div>
+    </form>
+    <div class="keypad hidden" id="control">
+      <div class="row">
+        <div class="button" id="close">&#128274;</div>
+      </div>
+      <div class="row">
+        <div class="button" id="open">&#128275;</div>
+      </div>
+    </div>
+    <div class="error"></div>
+  </body>
+</html>
