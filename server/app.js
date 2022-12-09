@@ -18,7 +18,7 @@ let staticPath = isWin
   ? new URL("../build", import.meta.url).pathname.substring(1)
   : new URL("../build", import.meta.url).pathname;
 console.log(staticPath);
-app.use(express.static("/", staticPath));
+app.use(express.static(staticPath));
 
 //app.use("/", indexRouter);
 app.use("/api", apiRouter);
