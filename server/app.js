@@ -13,13 +13,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-console.log(new URL("../build", import.meta.url).pathname.substring(1));
-app.use(
-  express.static(
-    "/",
-    new URL("../build", import.meta.url).pathname.substring(1)
-  )
-);
+var isWin = process.platform === "win32";
+let staticPath = isWin
+  ? new URL("../build", import.meta.url).pathname.substring(1)
+  : new URL("../build", import.meta.url).pathname;
+console.log(staticPath);
+app.use(express.static("/", staticPath));
 
 //app.use("/", indexRouter);
 app.use("/api", apiRouter);
