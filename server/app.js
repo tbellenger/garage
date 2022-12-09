@@ -13,11 +13,15 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+console.log(new URL("../build", import.meta.url).pathname.substring(1));
 app.use(
-  express.static(new URL("../build", import.meta.url).pathname.substring(1))
+  express.static(
+    "/",
+    new URL("../build", import.meta.url).pathname.substring(1)
+  )
 );
 
-app.use("/", indexRouter);
+//app.use("/", indexRouter);
 app.use("/api", apiRouter);
 
 export default app;
