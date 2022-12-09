@@ -1,7 +1,11 @@
 import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
+import Gpio from "onoff";
+
 var router = Router();
+
+let useLed = (led, value) => led.writeSync(value);
 
 /* POST open. */
 router.post(
@@ -9,6 +13,18 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     console.log(req.user.id);
+    let led;
+
+    if (Gpio.accessible) {
+      led = new Gpio(17, "out");
+    } else {
+      led = {
+        writeSync: (value) => {
+          console.log("virtual led now uses value " + value);
+        },
+      };
+    }
+    useLed(led, 20);
     res.json("{'message':'success'}");
   }
 );
