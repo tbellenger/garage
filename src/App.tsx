@@ -10,6 +10,7 @@ type AppProps = {
 type AppState = {
   value: string | "";
   token: string | null;
+  isOpen: boolean;
 };
 
 class App extends Component<AppProps, AppState> {
@@ -17,32 +18,69 @@ class App extends Component<AppProps, AppState> {
     super(props);
     this.state = {
       value: "",
-      token: localStorage.getItem('jwt')
+      token: localStorage.getItem('jwt'),
+      isOpen: false,
     };
   }
 
-  async sendIt() {
-    // do the send to server stuffm here
-    const code = JSON.stringify({code:this.state.value});
-    const response = await fetch('api', {
-      method: 'POST',
+  checkCode = async () => {
+    const response = await fetch("/api/code", {
+      method: "POST",
       headers: {
-        'Content-type': 'application/json'
+        "Content-type": "application/json",
       },
-      body: code
+      body: JSON.stringify({ password: this.state.value, email: "garage@birdhouse.com" }),
     });
     if (!response.ok) {
-      // show error message
-    } else {
-      const {jwt} = await response.json();
-      localStorage.setItem('jwt', JSON.stringify(jwt));
+      // show error
+      return;
     }
+    const jwt = await response.json();
+    localStorage.setItem("jwt", JSON.stringify(jwt));
+    // show door opener buttons
+    await this.isOpen(JSON.stringify(jwt));
+  };
+
+  toggleDoor = async (jwt: string) => {
+    try {
+      const response = await fetch("/api/toggle", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: jwt,
+      });
+      if (!response.ok) {
+        // show keypad - hide opener button - show error
+        return;
+      }
+      await response.json();
+    } catch (error) {
+      // show error
+    }
+    await this.isOpen(jwt);
+  };
+
+  isOpen = async (jwt: string) => {
+    const response = await fetch("/api/isopen", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: jwt,
+    });
+    if (!response.ok) {
+      // show error
+      return;
+    }
+    const doorStatus = await response.json();
+    this.setState({isOpen:doorStatus.isOpen});
   }
 
-  handleKeypadClick: KeypadClickCallback = (buttonValue) => {
+  handleKeypadClick: KeypadClickCallback = (buttonValue: string) => {
     switch (buttonValue) {
       case "E":
-        this.sendIt();
+        this.checkCode();
         break;
       case "C":
         if (this.state.value.length > 0) {
