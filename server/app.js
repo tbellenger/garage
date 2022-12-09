@@ -17,7 +17,7 @@ app.use(
   express.static(new URL("../build", import.meta.url).pathname.substring(1))
 );
 
-//app.use("/", indexRouter);
+app.use("/", indexRouter);
 app.use("/api", apiRouter);
 
 export default app;
