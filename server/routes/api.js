@@ -30,10 +30,10 @@ router.post(
 );
 
 router.post(
-  "/status",
+  "/isopen",
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
-    res.json("{'message':'success', 'status':'open'}");
+    res.json("{'message':'success', 'isOpen':true}");
   }
 );
 
