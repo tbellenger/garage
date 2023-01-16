@@ -1,34 +1,53 @@
 import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
-import Gpio from "onoff";
+import { Gpio } from "onoff";
 
 var router = Router();
 
-let useLed = (led, value) => led.writeSync(value);
+let toggleDoor = (door) => {
+  door.writeSync(1);
+  setTimeout(() => {
+    door.writeSync(0);
+  }, 500);
+};
 
 /* POST open. */
 router.post(
-  "/toggle",
+  "/toggle/:doorId",
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     console.log(req.user.id);
-    let led;
+    let door1;
+    let door2;
 
     if (Gpio.accessible) {
-      led = new Gpio(17, "out");
+      door1 = new Gpio(17, "out");
+      door2 = new Gpio(27, "out");
     } else {
-      led = {
+      door1 = {
+        writeSync: (value) => {
+          console.log("virtual led now uses value " + value);
+        },
+      };
+      door2 = {
         writeSync: (value) => {
           console.log("virtual led now uses value " + value);
         },
       };
     }
-    useLed(led, 1);
-    setTimeout(() => {
-      useLed(led, 0);
-    }, 500);
-    res.json("{'message':'success'}");
+    switch (req.params.doorId) {
+      case "1":
+        toggleDoor(door1);
+        res.json("{'message':'success'}");
+        break;
+      case "2":
+        toggleDoor(door2);
+        res.json("{'message':'success'}");
+        break;
+      default:
+        res.json("{'error':'door does not exist'}");
+    }
   }
 );
 

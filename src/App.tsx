@@ -17,7 +17,7 @@ type AppState = {
 
 class App extends Component<AppProps, AppState> {
   numberKeypad = {layout : [['7','8','9'],['4','5','6'],['1','2','3'],['\u2421' /* delete */,'0','\u23ce' /* enter */]]}
-  doorKeypad = {layout : [['\u229A' /* circle */]]}
+  doorKeypad = {layout : [['\u229D' /* circle dash */],['\u229C' /* circle equals */]]}
 
   constructor(props: AppProps) {
     super(props);
@@ -56,11 +56,18 @@ class App extends Component<AppProps, AppState> {
           this.setState({value: this.state.value.substring(0, this.state.value.length - 1)});
         }
         break;
-      case "\u229a": // circle symbol
+      case "\u229d": // circle symbol
         if (!this.state.token) {
           this.setState({error: "Token is null"})
         } else {
-          this.toggleDoor(this.state.token);
+          this.toggleDoor(this.state.token, 1);
+        }
+        break;
+      case "\u229c": // circle symbol
+        if (!this.state.token) {
+          this.setState({error: "Token is null"})
+        } else {
+          this.toggleDoor(this.state.token, 2);
         }
         break;
       default:
@@ -90,9 +97,9 @@ class App extends Component<AppProps, AppState> {
     this.setState({showNumberKeypad: false});
   };
 
-  async toggleDoor (jwt: string) {
+  async toggleDoor (jwt: string, door: number) {
     try {
-      const response = await fetch("/api/toggle", {
+      const response = await fetch("/api/toggle/" + door, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -109,7 +116,6 @@ class App extends Component<AppProps, AppState> {
       // show error
       this.setState({showNumberKeypad: true, error: "Something bad happened"});
     }
-    await this.isOpen(jwt);
   };
 
   async isOpen (jwt: string) {
