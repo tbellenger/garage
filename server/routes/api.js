@@ -24,7 +24,10 @@ router.post(
         },
       };
     }
-    useLed(led, 20);
+    useLed(led, 1);
+    setTimeout(() => {
+      useLed(led, 0);
+    }, 500);
     res.json("{'message':'success'}");
   }
 );

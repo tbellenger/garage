@@ -8,13 +8,7 @@
     color: grey;
     align-content: space-around;
 }
-  
-.row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-  
+
 button {
     border: 1px solid black;
     border-radius: 7px;
@@ -29,7 +23,10 @@ button {
     height: 60px;
     font-size: 30px;
     line-height: 57px;
-    cursor: pointer;
+    cursor: pointer; 
+    display: flex;
+    justify-content: center;
+    justify-items: center;
 }
 
 button:hover {
